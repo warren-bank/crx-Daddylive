@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         Daddylive
 // @description  Improve site usability. Watch videos in external player.
-// @version      1.0.0
-// @match        *://daddylive.me/channels/stream-*
-// @match        *://*.daddylive.me/channels/stream-*
+// @version      1.0.1
+// @match        *://daddylive.me/*
+// @match        *://*.daddylive.me/*
 // @match        *://eplayer.to/daddylive.php*
 // @match        *://*.eplayer.to/daddylive.php*
+// @match        *://jazzy.to/daddylive.php*
+// @match        *://*.jazzy.to/daddylive.php*
 // @icon         https://i.imgur.com/8EL6mr3.png
 // @run-at       document-end
 // @grant        unsafeWindow
@@ -174,7 +176,7 @@ var process_live_videostream = function() {
 var init = function() {
   var hostname        = unsafeWindow.location.hostname
   var is_outer_frame  = (hostname.indexOf('daddylive.me') >= 0)
-  var is_inner_iframe = (hostname.indexOf('eplayer.to')   >= 0)
+  var is_inner_iframe = !is_outer_frame
 
   if (is_outer_frame) {
     // in WebMonkey, redirect to URL of inner iframe w/ referer
