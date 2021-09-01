@@ -1,0 +1,4 @@
+https://daddylive.me/24-hours-channels.php
+https://daddylive.me/channels/stream-53.php
+https://www.eplayer.to/daddylive.php?live=53&vw=100vw&vh=100vh
+  source: "https://b.jazzy.to:30443/live/53/playlist.m3u8?wmsAuthSign=.....",
