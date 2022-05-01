@@ -1,13 +1,9 @@
 // ==UserScript==
 // @name         Daddylive
 // @description  Improve site usability. Watch videos in external player.
-// @version      1.0.2
-// @match        *://daddylive.me/*
-// @match        *://*.daddylive.me/*
-// @match        *://eplayer.to/daddylive.php*
-// @match        *://*.eplayer.to/daddylive.php*
-// @match        *://jazzy.to/daddylive.php*
-// @match        *://*.jazzy.to/daddylive.php*
+// @version      1.0.3
+// @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:daddylive\.(?:me|eu|nl)|licenses\d+\.me)\/.*$/
+// @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:(?:eplayer|jazzy)\.to|eplayer\.click\/premiumtv)\/daddylive\.php.*$/
 // @icon         https://i.imgur.com/8EL6mr3.png
 // @run-at       document-end
 // @grant        unsafeWindow
@@ -151,15 +147,17 @@ var process_dash_url = function(dash_url, vtt_url, referer_url) {
 // ----------------------------------------------------------------------------- redirect to iframe
 
 var redirect_to_iframe = function() {
-  var iframe, iframe_url
+  var iframe, iframe_url, iframe_origin
 
-  iframe = unsafeWindow.document.querySelector('iframe#thatframe[src]')
+  iframe = unsafeWindow.document.querySelector('iframe[allowfullscreen="true"][src]')
 
   if (!iframe)
     return
 
-  iframe_url = iframe.getAttribute('src')
-  redirect_to_url(iframe_url)
+  iframe_url    = iframe.getAttribute('src')
+  iframe_url    = GM_resolveUrl(iframe_url, unsafeWindow.location.href) || iframe_url
+  iframe_origin = iframe_url.replace(/^(https?:\/\/[^\/]+\/).*$/i, '$1')
+  GM_loadFrame(iframe_url, iframe_origin)
 }
 
 // ----------------------------------------------------------------------------- process video within iframe
@@ -169,7 +167,7 @@ var process_live_videostream = function() {
 
   regex = {
     whitespace: /[\r\n\t]+/g,
-    video_url:  /^.*\s+source:\s+['"]([^'"]+m3u8[^'"]*)['"].*$/
+    video_url:  /^.*\s+source:\s*['"]([^'"]+m3u8[^'"]*)['"].*$/
   }
 
   scripts = unsafeWindow.document.querySelectorAll('script:not([src])')
@@ -195,14 +193,14 @@ var process_live_videostream = function() {
 
 var init = function() {
   var hostname        = unsafeWindow.location.hostname
-  var is_outer_frame  = (hostname.indexOf('daddylive.me') >= 0)
+  var is_outer_frame  = (hostname.indexOf('licenses') === -1)
   var is_inner_iframe = !is_outer_frame
 
   if (is_outer_frame) {
     // in WebMonkey, redirect to URL of inner iframe w/ referer
     // in TamperMonkey, the userscript will be injected directly into the iframe without any additional action required
 
-    if (typeof GM_loadUrl === 'function') {
+    if (typeof GM_loadFrame === 'function') {
       redirect_to_iframe()
     }
 

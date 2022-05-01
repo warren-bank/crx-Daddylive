@@ -1,0 +1,11 @@
+Android WebMonkey:
+  - since userscripts don't run in iframes,
+    and browser security prevents reading content in a cross-origin iframe window,
+    and the nested iframe windows include javascript to redirect when not loaded as an iframe,
+    a working solution is going to require some more work.. TBD
+
+TamperMonkey:
+  - since userscripts do run in iframes,
+    all that's really needed is to match the inner-most iframe,
+    which includes the URL for the video stream,
+    and the code to extract it
