@@ -1,0 +1,72 @@
+https://maxsport.one/stream33.php
+https://sportkart1.xyz/tv/scplayer-33.php
+https://streamservicehd.click/premiumtv/sportkart.php?id=33
+  source:'https://webudi.openhd.lol/lb/premium33/index.m3u8'
+
+--------------------------------------------------------------------------------
+
+restrictions:
+=============
+* https://streamservicehd.click/premiumtv/sportkart.php?id=33
+  - "Referer" header is required to load page
+  - page must be loaded in iframe (ie: window.top !== window)
+* https://webudi.openhd.lol/lb/premium33/index.m3u8
+  - "Referer" header is required to access stream
+
+strategy for WebMonkey:
+=======================
+* match all 3x domains: "maxsport.one", "sportkart1.xyz", "streamservicehd.click"
+  1) scan dom for: script[src]
+     * grep for: source: '[^']+\.m3u8'
+       - if found: done (success)
+       - else..
+
+  2) scan dom for: iframe[allowfullscreen][src]
+     a) if nested DOM can be accessed (ie: same domain), then: goto #1
+     b) else: GM_loadFrame(urlFrame, urlFrame.replace(/^(https?:\/\/[^\/]+\/?).*$/i, '$1'))
+        note: when page reloads, processing will follow: #1, #2a, #1
+
+* summary:
+  - WebMonkey doesn't run userscripts in iframes.. only the top-level window
+  - since some of the pages include javascript to redirect when the page isn't loaded within an iframe,
+    this is a condition that should always be handled,
+    and the best way to handle this condition is to always load the iframe in a parent window that:
+    * will run the userscript
+    * is at the same domain as the iframe, so the userscript can read its DOM content
+
+strategy for TamperMonkey:
+==========================
+* same as WebMonkey, but only step #1 is needed
+
+--------------------------------------------------------------------------------
+
+curl 'https://streamservicehd.click/premiumtv/sportkart.php?id=33' \
+  -H 'Referer: https://streamservicehd.click/' \
+  --include --compressed
+
+HTTP/2 401
+<h2>STREAM IS DOMAIN PROTECTED.</h2>
+
+--------------------------------------------------------------------------------
+
+curl 'https://streamservicehd.click/premiumtv/sportkart.php?id=33' \
+  -H 'Referer: https://sportkart1.xyz/tv/scplayer-33.php' \
+  --include --compressed
+
+HTTP/2 200
+<script>
+  {..., source:'https://webudi.openhd.lol/lb/premium33/index.m3u8'}
+</script>
+
+--------------------------------------------------------------------------------
+
+status:
+=======
+* userscript is updated to reflect the changed domains (ie: Daddylive => Maxsport)
+* userscript works great in TamperMonkey
+* as the notes from "2022-05-01" indicate,
+  the cross-domain protection strategy used by the site is successful
+  in preventing WebMonkey from being able to access the DOM
+  that contains the the <script> tag that holds the .m3u8 video URL
+
+--------------------------------------------------------------------------------
