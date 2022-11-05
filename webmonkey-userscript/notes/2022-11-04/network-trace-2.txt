@@ -1,0 +1,25 @@
+https://maxsport.one/btsport5.php
+https://gocast2.com/max.php?player=desktop&live=hdchnl10
+  player.load({source: ptHUtrlget(), mimeType: 'application/vnd.apple.mpegurl'});
+
+  function ptHUtrlget() {
+    return(["h","t","t","p","s",":","\/","\/","g","o","1",".","g","o","c","a","s","t","2",".","c","o","m",":","9","9","9","\/","h","l","s","\/","h","d","c","h","n","l","1","0",".","m","3","u","8","?","m","d","5","=","c","S","p","Z","S","_","9","A","L","O","f","8","n","S","Q","V","R","T","I","K","T","Q","&","e","x","p","i","r","e","s","=","1","6","6","7","6","1","2","2","7","6"].join("") + aseUararltrAybrugeniS.join("") + document.getElementById("ktaitgBfeisuncrSah").innerHTML);
+  }
+
+--------------------------------------------------------------------------------
+
+console:
+========
+window["ptHUtrlget"]()
+  https://go1.gocast2.com:999/hls/hdchnl10.m3u8?md5=cSpZS_9ALOf8nSQVRTIKTQ&expires=1667612276
+
+--------------------------------------------------------------------------------
+
+restrictions:
+=============
+* https://gocast2.com/max.php?player=desktop&live=hdchnl10
+  - none
+* https://go1.gocast2.com:999/hls/hdchnl10.m3u8?md5=cSpZS_9ALOf8nSQVRTIKTQ&expires=1667612276
+  - "Referer" header is required to access stream
+
+--------------------------------------------------------------------------------

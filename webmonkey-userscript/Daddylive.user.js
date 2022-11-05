@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Maxsport
 // @description  Improve site usability. Watch videos in external player.
-// @version      2.0.0
-// @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:maxsport\.one|sportkart\d+\.xyz|streamservicehd\.click)\/.*$/
+// @version      2.1.0
+// @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:maxsport\.one|sportkart\d+\.xyz|streamservicehd\.click|gocast\d+\.com)\/.*$/
 // @icon         https://i.imgur.com/8EL6mr3.png
 // @run-at       document-end
 // @grant        unsafeWindow
@@ -171,24 +171,56 @@ var process_dom_video_url = function() {
   return !!video_url
 }
 
-var extract_dom_video_url = function() {
-  var regex, scripts, script, video_url
-
-  regex = {
-    whitespace: /[\r\n\t]+/g,
-    video_url:  /^.*\s+source:\s*['"]([^'"]+m3u8[^'"]*)['"].*$/
+var extract_dom_video_url_regexs = {
+  whitespace: /[\r\n\t]+/g,
+  v01: {
+    video_url: /^.*\s+source:\s*['"]([^'"]+m3u8[^'"]*)['"].*$/
+  },
+  v02: {
+    video_method: /^.*[;\s]player\.load\s*\(\s*\{\s*source\s*:\s*(.+?)\s*\(\s*\)\s*,\s*mimeType\s*:\s*['"]([^'"]+)['"]\s*\}\s*\).*$/
   }
+}
+
+var extract_dom_video_url = function() {
+  var scripts, script, video_url
 
   scripts = state.document.querySelectorAll('script:not([src])')
 
   for (var i=0; i < scripts.length; i++) {
     script = scripts[i]
     script = script.innerHTML
-    script = script.replace(regex.whitespace, ' ')
+    script = script.replace(extract_dom_video_url_regexs.whitespace, ' ')
 
-    if (regex.video_url.test(script)) {
-      video_url = script.replace(regex.video_url, '$1')
-      break
+    video_url = extract_dom_video_url_01(script) || extract_dom_video_url_02(script)
+
+    if (video_url) break
+  }
+
+  return video_url
+}
+
+var extract_dom_video_url_01 = function(script) {
+  var video_url
+
+  if (extract_dom_video_url_regexs.v01.video_url.test(script)) {
+    video_url = script.replace(extract_dom_video_url_regexs.v01.video_url, '$1')
+  }
+
+  return video_url
+}
+
+var extract_dom_video_url_02 = function(script) {
+  var video_method, video_mimetype, video_url
+
+  if (extract_dom_video_url_regexs.v02.video_method.test(script)) {
+    script = script.replace(extract_dom_video_url_regexs.v02.video_method, function(m0, m1, m2) {
+      video_method   = m1
+      video_mimetype = m2
+      return ''
+    })
+
+    if (video_method && unsafeWindow[video_method] && (typeof unsafeWindow[video_method] === 'function')) {
+      video_url = unsafeWindow[video_method]()
     }
   }
 
