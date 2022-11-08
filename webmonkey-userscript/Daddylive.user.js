@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Maxsport
 // @description  Improve site usability. Watch videos in external player.
-// @version      2.1.0
+// @version      2.1.1
 // @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:maxsport\.one|sportkart\d+\.xyz|streamservicehd\.click|gocast\d+\.com)\/.*$/
 // @icon         https://i.imgur.com/8EL6mr3.png
 // @run-at       document-end
@@ -19,8 +19,9 @@
 
 var user_options = {
   "common": {
+    "enable_debug_alerts":          false,
     "emulate_webmonkey":            false,
-    "init_delay_ms":                0
+    "init_delay_ms":                1000
   },
   "webmonkey": {
     "post_intent_redirect_to_url":  "about:blank"
@@ -165,8 +166,12 @@ var process_window = function() {
 var process_dom_video_url = function() {
   var video_url = extract_dom_video_url()
 
-  if (video_url)
+  if (video_url) {
+    if (user_options.common.enable_debug_alerts)
+      unsafeWindow.alert(JSON.stringify({hls_url: video_url, referer_url: state.referer_url}, null, 2))
+
     process_hls_url(video_url, /* vtt_url= */ null, state.referer_url)
+  }
 
   return !!video_url
 }
@@ -233,27 +238,37 @@ var process_dom_nested_iframe = function() {
   // only run in WebMonkey
   if ((typeof GM_loadFrame !== 'function') && !user_options.common.emulate_webmonkey) return
 
-  var iframe, iframe_url, iframe_origin
+  var iframe, iframe_url
   iframe = extract_dom_nested_iframe()
   if (iframe) {
+    iframe_url = iframe.getAttribute('src')
+
+    if (typeof GM_resolveUrl === 'function')
+      iframe_url = GM_resolveUrl(iframe_url, state.referer_url) || iframe_url
+
     try {
       // can the top window access the document belonging to the nested iframe (ie: same domain)
       state.document    = iframe.contentWindow.document
       state.referer_url = iframe.contentWindow.location.href
 
+      if (state.referer_url.indexOf('about:') === 0)
+        state.referer_url = iframe_url
+
       // success.. process the new DOM
       process_window()
     }
     catch(e) {
+      if (user_options.common.enable_debug_alerts)
+        unsafeWindow.alert(JSON.stringify({iframe_url, parent_url: state.referer_url}, null, 2))
+
       // reload iframe in a new top window that can access the document
-      iframe_url    = iframe.getAttribute('src')
-      iframe_url    = GM_resolveUrl(iframe_url, state.referer_url) || iframe_url
-      iframe_origin = iframe_url.replace(/^(https?:\/\/[^\/]+\/).*$/i, '$1')
+      if (typeof GM_loadFrame === 'function')
+        GM_loadFrame(iframe_url, state.referer_url, true)
+      else if (user_options.common.emulate_webmonkey)
+        redirect_to_url(iframe_url)
 
       state.document    = null
       state.referer_url = null
-
-      GM_loadFrame(iframe_url, iframe_origin)
     }
   }
 }
