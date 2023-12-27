@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Maxsport
+// @name         Daddylive
 // @description  Improve site usability. Watch videos in external player.
-// @version      2.1.1
-// @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:maxsport\.one|sportkart\d+\.xyz|streamservicehd\.click|gocast\d+\.com)\/.*$/
+// @version      2.1.2
+// @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:daddylive\.(?:me|watch)|daddylivehd\.(?:one)|maxsport\.(?:one)|sportkart\d+\.(?:xyz)|streamservicehd\.(?:click)|gocast\d+\.(?:com)|radamel\.(?:icu)|zvision\.(?:link)|jewelavid\.(?:com)|dlhd\.(?:sx)|weblivehdplay\.(?:ru))\/.*$/
 // @icon         https://i.imgur.com/8EL6mr3.png
 // @run-at       document-end
 // @grant        unsafeWindow
