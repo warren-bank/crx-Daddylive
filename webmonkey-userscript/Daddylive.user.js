@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Daddylive
 // @description  Improve site usability. Watch videos in external player.
-// @version      2.3.1
+// @version      2.3.2
 // @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:1ststream\.shop|247ovo\.lol|a1sports\.shop|apkship\.shop|arlive\.shop|beststreams\.shop|bfstv\.shop|bigsportz\.shop|bingsport\.shop|bizzstream\.shop|buddycenter\.shop|buddycenters\.shop|buzzstream\.shop|crackstreamshd\.shop|cwcstreams\.com|cyclinsport\.shop|daddy-stream\.xyz|daddyhd\.shop|daddyislive\.online|daddylive1\.ru|daddylive1\.shop|dailytechs\.shop|dlhd\.so|dlhd\.sx|doralive\.live|duplex-full\.shop|engstreams\.shop|f1streams\.lol|firestream4u\.shop|footballstreams\.lol|footyhunterhd\.shop|foxstream4u\.shop|freelivetvone\.xyz|freetvspor\.lol|freetvspor\.shop|fsportshd\.shop|gomstream\.info|hitsports\.shop|homosports\.shop|kingstreams\.shop|kingstreamss\.shop|klubsports\.buzz|klubsports\.fun|klubsports\.site|kofitv\.live|linesportz\.lol|liveplays\.shop|livesports2u\.shop|miztv\.shop|mudasir3u\.shop|nowagoal\.lol|one-stream\.shop|pandastreams\.shop|pandastreamz\.shop|poscitechs\.lol|poscitechs\.shop|poscitechs\.xyz|rainostream4u\.shop|rainostreams\.lol|rippleamu4\.shop|rippleamu4s\.shop|ripplestream2u\.shop|ripplestream4u\.shop|ripplestreams\.shop|ripplestreams2u\.shop|rockhd\.lol|soccer100\.shop|soccerhub\.lol|soccerstreams2\.click|socceryouknow\.shop|sooperstream4u\.shop|sports2watch\.shop|sportss\.shop|sportsslive\.shop|sportstreamslife\.shop|sportzlive\.shop|streamer4u\.shop|streamlight\.lol|stronstream\.shop|techtop3u\.shop|techttop\.shop|thebaldstreamer\.lol|thedaddy\.click|thedaddy\.to|thesport\.lol|tonnestreams\.shop|tripplestream\.com|tvtoss\.lol|unitedbacke\.shop|venushd\.click|viprow1\.shop|vipstreamer\.shop|vipstreamers\.shop|watchhdtv\.shop|worldsports4u\.shop|worldsportz4u\.shop|worldstreams\.lol|worldstreamz\.shop|www\.worldstreamz.shop|zenlic\.shop)\/.*$/
 // @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:cookiewebplay|daddylive|daddylivehd|dlhd|gocast|jewelavid|maxsport|quest4play|radamel|sportkart|streamservicehd|thedaddy|weblivehdplay|zvision)\d*\.(?:buzz|click|com|fun|icu|info|link|live|lol|me|one|online|ru|shop|site|so|sx|to|watch|xyz)\/.*$/
 // @icon         https://i.imgur.com/8EL6mr3.png
@@ -16,7 +16,7 @@
 // @copyright    Warren Bank
 // ==/UserScript==
 
-// ----------------------------------------------------------------------------- constants
+// ----------------------------------------------------------------------------- user options
 
 var user_options = {
   "common": {
@@ -32,6 +32,14 @@ var user_options = {
     "redirect_to_webcast_reloaded": true,
     "force_http":                   true,
     "force_https":                  false
+  }
+}
+
+// ----------------------------------------------------------------------------- constants
+
+var constants = {
+  "dom_ids": {
+    "container": "crx-daddylive-container"
   }
 }
 
@@ -185,7 +193,7 @@ var process_window = function() {
 var rewrite_dom = function() {
   var scripts = extract_dom_scripts()
   var iframe = extract_dom_nested_iframe()
-  var elements
+  var elements, container
 
   elements = [
     '.tabs > .tabby-tab:first-child > .tabby-content'
@@ -196,12 +204,15 @@ var rewrite_dom = function() {
 
   empty_dom_node(state.document.body)
   state.document.open()
-  state.document.write('<h3><a href="/24-7-channels.php">DaddyLive</a></h3>')
+  state.document.write('<style>html > *, html > body > * {display: none !important;} html > body, html > body > div#' + constants.dom_ids.container + ' {display: block !important;}</style>')
+  state.document.write('<div id="' + constants.dom_ids.container + '"><h3><a href="/24-7-channels.php">DaddyLive</a></h3></div>')
   state.document.close()
+
+  container = state.document.getElementById(constants.dom_ids.container)
 
   if (scripts) {
     for (var i=0; i < scripts.length; i++) {
-      state.document.body.appendChild(scripts[i])
+      container.appendChild(scripts[i])
     }
   }
 
@@ -211,17 +222,17 @@ var rewrite_dom = function() {
       iframe.style.height = '0px'
     }
 
-    state.document.body.appendChild(iframe)
+    container.appendChild(iframe)
   }
 
   for (var i=0; i < elements.length; i++) {
     if (elements[i]) {
-      state.document.body.appendChild(elements[i])
+      container.appendChild(elements[i])
     }
   }
 
   // update link targets
-  elements = state.document.querySelectorAll('a[target]')
+  elements = container.querySelectorAll('a[target]')
   if (elements) {
     for (var i=0; i < elements.length; i++) {
       elements[i].removeAttribute('target')
@@ -229,7 +240,7 @@ var rewrite_dom = function() {
   }
 
   // update link relationship
-  elements = state.document.querySelectorAll('a[rel]')
+  elements = container.querySelectorAll('a[rel]')
   if (elements) {
     for (var i=0; i < elements.length; i++) {
       elements[i].removeAttribute('rel')

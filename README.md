@@ -11,7 +11,7 @@
   - for [Chrome/Chromium](https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag)
 
 Its purpose is to:
-* redirect embedded videos from [thedaddy.to](https://dlhd.so/) to an external player
+* redirect embedded videos from [thedaddy.to](https://thedaddy.to/24-7-channels.php) to an external player
 
 #### Notes:
 
