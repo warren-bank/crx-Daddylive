@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Daddylive
 // @description  Improve site usability. Watch videos in external player.
-// @version      2.2.1
+// @version      2.3.0
 // @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:1ststream\.shop|247ovo\.lol|a1sports\.shop|apkship\.shop|arlive\.shop|beststreams\.shop|bfstv\.shop|bigsportz\.shop|bingsport\.shop|bizzstream\.shop|buddycenter\.shop|buddycenters\.shop|buzzstream\.shop|crackstreamshd\.shop|cwcstreams\.com|cyclinsport\.shop|daddy-stream\.xyz|daddyhd\.shop|daddyislive\.online|daddylive1\.ru|daddylive1\.shop|dailytechs\.shop|dlhd\.so|dlhd\.sx|doralive\.live|duplex-full\.shop|engstreams\.shop|f1streams\.lol|firestream4u\.shop|footballstreams\.lol|footyhunterhd\.shop|foxstream4u\.shop|freelivetvone\.xyz|freetvspor\.lol|freetvspor\.shop|fsportshd\.shop|gomstream\.info|hitsports\.shop|homosports\.shop|kingstreams\.shop|kingstreamss\.shop|klubsports\.buzz|klubsports\.fun|klubsports\.site|kofitv\.live|linesportz\.lol|liveplays\.shop|livesports2u\.shop|miztv\.shop|mudasir3u\.shop|nowagoal\.lol|one-stream\.shop|pandastreams\.shop|pandastreamz\.shop|poscitechs\.lol|poscitechs\.shop|poscitechs\.xyz|rainostream4u\.shop|rainostreams\.lol|rippleamu4\.shop|rippleamu4s\.shop|ripplestream2u\.shop|ripplestream4u\.shop|ripplestreams\.shop|ripplestreams2u\.shop|rockhd\.lol|soccer100\.shop|soccerhub\.lol|soccerstreams2\.click|socceryouknow\.shop|sooperstream4u\.shop|sports2watch\.shop|sportss\.shop|sportsslive\.shop|sportstreamslife\.shop|sportzlive\.shop|streamer4u\.shop|streamlight\.lol|stronstream\.shop|techtop3u\.shop|techttop\.shop|thebaldstreamer\.lol|thedaddy\.click|thedaddy\.to|thesport\.lol|tonnestreams\.shop|tripplestream\.com|tvtoss\.lol|unitedbacke\.shop|venushd\.click|viprow1\.shop|vipstreamer\.shop|vipstreamers\.shop|watchhdtv\.shop|worldsports4u\.shop|worldsportz4u\.shop|worldstreams\.lol|worldstreamz\.shop|www\.worldstreamz.shop|zenlic\.shop)\/.*$/
 // @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:cookiewebplay|daddylive|daddylivehd|dlhd|gocast|jewelavid|maxsport|quest4play|radamel|sportkart|streamservicehd|thedaddy|weblivehdplay|zvision)\d*\.(?:buzz|click|com|fun|icu|info|link|live|lol|me|one|online|ru|shop|site|so|sx|to|watch|xyz)\/.*$/
 // @icon         https://i.imgur.com/8EL6mr3.png
@@ -39,6 +39,7 @@ var user_options = {
 
 var state = {
   document:    null,
+  url:         null,
   referer_url: null
 }
 
@@ -155,14 +156,28 @@ var process_dash_url = function(dash_url, vtt_url, referer_url) {
 // ----------------------------------------------------------------------------- process window
 
 var process_window = function() {
+  var iframe_url
+
   if (!state.document) {
-    state.document    = unsafeWindow.document
-    state.referer_url = unsafeWindow.location.href
+    state.document = unsafeWindow.document
+    state.url      = unsafeWindow.location.href
   }
 
-  rewrite_dom()
+  if (state.document.readyState === 'loading') {
+    state.document.addEventListener('DOMContentLoaded', process_window)
+  }
+  else {
+    state.referer_url = state.url
 
-  process_dom_video_url() || process_dom_nested_iframe()
+    iframe_url = get_iframe_url()
+    if (iframe_url) {
+      state.referer_url = iframe_url
+    }
+
+    rewrite_dom()
+
+    process_dom_video_url() || process_dom_nested_iframe()
+  }
 }
 
 // ----------------------------------------------------------------------------- rewrite DOM
@@ -219,10 +234,16 @@ var process_dom_video_url = function() {
   var video_url = extract_dom_video_url()
 
   if (video_url) {
-    if (user_options.common.enable_debug_alerts)
+    if (user_options.common.enable_debug_alerts) {
       unsafeWindow.alert(JSON.stringify({hls_url: video_url, referer_url: state.referer_url}, null, 2))
+    }
 
     process_hls_url(video_url, /* vtt_url= */ null, state.referer_url)
+  }
+  else {
+    if (user_options.common.enable_debug_alerts) {
+      unsafeWindow.alert('video not found in:' + "\n" + state.url)
+    }
   }
 
   return !!video_url
@@ -252,6 +273,8 @@ var extract_dom_video_url = function() {
 
     if (video_url) break
   }
+
+  video_url = normalize_video_url(video_url)
 
   return video_url
 }
@@ -284,6 +307,13 @@ var extract_dom_video_url_02 = function(script) {
   return video_url
 }
 
+var normalize_video_url = function(video_url) {
+  if (video_url) {
+    video_url = video_url.replace(/[\\]/g, '')
+  }
+  return video_url
+}
+
 var extract_dom_scripts = function() {
   return state.document.querySelectorAll('script:not([src])')
 }
@@ -297,40 +327,72 @@ var process_dom_nested_iframe = function() {
   var iframe, iframe_url
   iframe = extract_dom_nested_iframe()
   if (iframe) {
-    iframe_url = iframe.getAttribute('src')
-
-    if (typeof GM_resolveUrl === 'function')
-      iframe_url = GM_resolveUrl(iframe_url, state.referer_url) || iframe_url
+    iframe_url = get_iframe_url(iframe)
 
     try {
       // can the top window access the document belonging to the nested iframe (ie: same domain)
-      state.document    = iframe.contentWindow.document
-      state.referer_url = iframe.contentWindow.location.href
+      state.document = iframe.contentDocument
 
-      if (state.referer_url.indexOf('about:') === 0)
-        state.referer_url = iframe_url
+      if (!state.document)
+        throw new Error('cannot access: window.document')
+
+      if (!extract_dom_scripts().length)
+        throw new Error('cannot access: <script> elements in DOM')
+
+      state.url = iframe.contentWindow.location.href
+
+      if (!state.url || (state.url.indexOf('about:') === 0))
+        state.url = iframe_url
+
+      if (user_options.common.enable_debug_alerts) {
+        unsafeWindow.alert('processing iframe:' + "\n" + state.url)
+      }
 
       // success.. process the new DOM
       process_window()
     }
     catch(e) {
-      if (user_options.common.enable_debug_alerts)
-        unsafeWindow.alert(JSON.stringify({iframe_url, parent_url: state.referer_url}, null, 2))
+      if (user_options.common.enable_debug_alerts) {
+        unsafeWindow.alert('Error inspecting iframe: ' + e.message)
+        unsafeWindow.alert(JSON.stringify({iframe_url, parent_url: state.url}, null, 2))
+      }
 
       // reload iframe in a new top window that can access the document
       if (typeof GM_loadFrame === 'function')
-        GM_loadFrame(iframe_url, state.referer_url, true)
+        GM_loadFrame(iframe_url, state.url, true)
       else if (user_options.common.emulate_webmonkey)
         redirect_to_url(iframe_url)
 
       state.document    = null
+      state.url         = null
       state.referer_url = null
+    }
+  }
+  else {
+    if (user_options.common.enable_debug_alerts) {
+      unsafeWindow.alert('iframe not found in:' + "\n" + state.url)
     }
   }
 }
 
 var extract_dom_nested_iframe = function() {
   return state.document.querySelector('iframe[allowfullscreen][src]')
+}
+
+var get_iframe_url = function(iframe) {
+  var iframe_url
+
+  if (!iframe)
+    iframe = extract_dom_nested_iframe()
+
+  if (iframe) {
+    iframe_url = iframe.getAttribute('src')
+
+    if (typeof GM_resolveUrl === 'function')
+      iframe_url = GM_resolveUrl(iframe_url, state.url) || iframe_url
+  }
+
+  return iframe_url
 }
 
 // ----------------------------------------------------------------------------- bootstrap
