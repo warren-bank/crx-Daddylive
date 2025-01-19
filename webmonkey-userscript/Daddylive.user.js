@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         Daddylive
 // @description  Improve site usability. Watch videos in external player.
-// @version      2.1.3
-// @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:(?:cookiewebplay|daddylive|daddylivehd|dlhd|gocast|jewelavid|maxsport|radamel|sportkart|streamservicehd|thedaddy|weblivehdplay|zvision)\d*\.(?:click|com|icu|link|me|one|ru|so|sx|to|watch|xyz))\/.*$/
+// @version      2.2.0
+// @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:1ststream\.shop|247ovo\.lol|a1sports\.shop|apkship\.shop|arlive\.shop|beststreams\.shop|bfstv\.shop|bigsportz\.shop|bingsport\.shop|bizzstream\.shop|buddycenter\.shop|buddycenters\.shop|buzzstream\.shop|crackstreamshd\.shop|cwcstreams\.com|cyclinsport\.shop|daddy-stream\.xyz|daddyhd\.shop|daddyislive\.online|daddylive1\.ru|daddylive1\.shop|dailytechs\.shop|dlhd\.so|dlhd\.sx|doralive\.live|duplex-full\.shop|engstreams\.shop|f1streams\.lol|firestream4u\.shop|footballstreams\.lol|footyhunterhd\.shop|foxstream4u\.shop|freelivetvone\.xyz|freetvspor\.lol|freetvspor\.shop|fsportshd\.shop|gomstream\.info|hitsports\.shop|homosports\.shop|kingstreams\.shop|kingstreamss\.shop|klubsports\.buzz|klubsports\.fun|klubsports\.site|kofitv\.live|linesportz\.lol|liveplays\.shop|livesports2u\.shop|miztv\.shop|mudasir3u\.shop|nowagoal\.lol|one-stream\.shop|pandastreams\.shop|pandastreamz\.shop|poscitechs\.lol|poscitechs\.shop|poscitechs\.xyz|rainostream4u\.shop|rainostreams\.lol|rippleamu4\.shop|rippleamu4s\.shop|ripplestream2u\.shop|ripplestream4u\.shop|ripplestreams\.shop|ripplestreams2u\.shop|rockhd\.lol|soccer100\.shop|soccerhub\.lol|soccerstreams2\.click|socceryouknow\.shop|sooperstream4u\.shop|sports2watch\.shop|sportss\.shop|sportsslive\.shop|sportstreamslife\.shop|sportzlive\.shop|streamer4u\.shop|streamlight\.lol|stronstream\.shop|techtop3u\.shop|techttop\.shop|thebaldstreamer\.lol|thedaddy\.click|thedaddy\.to|thesport\.lol|tonnestreams\.shop|tripplestream\.com|tvtoss\.lol|unitedbacke\.shop|venushd\.click|viprow1\.shop|vipstreamer\.shop|vipstreamers\.shop|watchhdtv\.shop|worldsports4u\.shop|worldsportz4u\.shop|worldstreams\.lol|worldstreamz\.shop|www\.worldstreamz.shop|zenlic\.shop)\/.*$/
+// @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:cookiewebplay|daddylive|daddylivehd|dlhd|gocast|jewelavid|maxsport|quest4play|radamel|sportkart|streamservicehd|thedaddy|weblivehdplay|zvision)\d*\.(?:buzz|click|com|fun|icu|info|link|live|lol|me|one|online|ru|shop|site|so|sx|to|watch|xyz)\/.*$/
 // @icon         https://i.imgur.com/8EL6mr3.png
 // @run-at       document-end
 // @grant        unsafeWindow
@@ -21,7 +22,8 @@ var user_options = {
   "common": {
     "enable_debug_alerts":          false,
     "emulate_webmonkey":            false,
-    "init_delay_ms":                1000
+    "hide_iframe":                  true,
+    "init_delay_ms":                0
   },
   "webmonkey": {
     "post_intent_redirect_to_url":  "about:blank"
@@ -158,7 +160,41 @@ var process_window = function() {
     state.referer_url = unsafeWindow.location.href
   }
 
+  rewrite_dom()
+
   process_dom_video_url() || process_dom_nested_iframe()
+}
+
+// ----------------------------------------------------------------------------- rewrite DOM
+
+var rewrite_dom = function() {
+  var scripts = extract_dom_scripts()
+  var iframe = extract_dom_nested_iframe()
+
+  empty_dom_node(state.document.body)
+  state.document.open()
+  state.document.write('<h3>DaddyLive</h3>')
+  state.document.close()
+
+  if (scripts) {
+    for (var i=0; i < scripts.length; i++) {
+      state.document.body.appendChild(scripts[i])
+    }
+  }
+
+  if (iframe) {
+    if (user_options.common.hide_iframe)
+      iframe.style.display = 'none'
+
+    state.document.body.appendChild(iframe)
+  }
+}
+
+var empty_dom_node = function(node) {
+  if (!node || !(node instanceof Node)) return
+
+  while (node.childNodes.length)
+    node.removeChild(node.childNodes[0])
 }
 
 // ----------------------------------------------------------------------------- process DOM (video url)
@@ -189,7 +225,7 @@ var extract_dom_video_url_regexs = {
 var extract_dom_video_url = function() {
   var scripts, script, video_url
 
-  scripts = state.document.querySelectorAll('script:not([src])')
+  scripts = extract_dom_scripts()
 
   for (var i=0; i < scripts.length; i++) {
     script = scripts[i]
@@ -230,6 +266,10 @@ var extract_dom_video_url_02 = function(script) {
   }
 
   return video_url
+}
+
+var extract_dom_scripts = function() {
+  return state.document.querySelectorAll('script:not([src])')
 }
 
 // ----------------------------------------------------------------------------- process DOM (nested iframe)
@@ -280,14 +320,21 @@ var extract_dom_nested_iframe = function() {
 // ----------------------------------------------------------------------------- bootstrap
 
 var init = function() {
-  if (user_options.common.emulate_webmonkey && (window.top !== window))
+  if (state.did_init) return
+  state.did_init = true
+
+  if (user_options.common.emulate_webmonkey && (unsafeWindow.top !== unsafeWindow.window))
     return
 
-  if (!state.document)
-    process_window()
+  process_window()
 }
 
-setTimeout(
-  init,
-  user_options.common.init_delay_ms
-)
+if ((typeof user_options.common.init_delay_ms === 'number') && (user_options.common.init_delay_ms > 0)) {
+  unsafeWindow.setTimeout(
+    init,
+    user_options.common.init_delay_ms
+  )
+}
+else {
+  init()
+}

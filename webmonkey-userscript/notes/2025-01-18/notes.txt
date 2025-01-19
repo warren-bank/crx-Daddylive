@@ -1,0 +1,167 @@
+--------------------------------------------------------------------------------
+
+curl -H "Referer: https://thedaddy.to/stream/stream-44.php" "https://cookiewebplay.xyz/premiumtv/daddylivehd.php?id=44" >iframe.html
+
+--------------------------------------------------------------------------------
+
+test:
+=====
+
+{
+  var encodedDomains = "WyIxc3RzdHJlYW0uc2hvcCIsImtpbmdzdHJlYW1zLnNob3AiLCJhMXNwb3J0cy5zaG9wIiwiYXJsaXZlLnNob3AiLCJiZXN0c3RyZWFtcy5zaG9wIiwiYmlnc3BvcnR6LnNob3AiLCJiaXp6c3RyZWFtLnNob3AiLCJidWRkeWNlbnRlcnMuc2hvcCIsImNyYWNrc3RyZWFtc2hkLnNob3AiLCJjd2NzdHJlYW1zLmNvbSIsImRhZGR5aGQuc2hvcCIsImRhZGR5aXNsaXZlLm9ubGluZSIsImRhZGR5bGl2ZTEuc2hvcCIsImRhaWx5dGVjaHMuc2hvcCIsImRsaGQuc3giLCJkbGhkLnNvIiwicG9zY2l0ZWNocy54eXoiLCJkb3JhbGl2ZS5saXZlIiwiZnJlZWxpdmV0dm9uZS54eXoiLCJmcmVldHZzcG9yLmxvbCIsImxpbmVzcG9ydHoubG9sIiwibGl2ZXNwb3J0czJ1LnNob3AiLCJtaXp0di5zaG9wIiwibXVkYXNpcjN1LnNob3AiLCJvbmUtc3RyZWFtLnNob3AiLCJwYW5kYXN0cmVhbXMuc2hvcCIsImtsdWJzcG9ydHMuYnV6eiIsInBvc2NpdGVjaHMuc2hvcCIsInJhaW5vc3RyZWFtNHUuc2hvcCIsInJhaW5vc3RyZWFtcy5sb2wiLCJyaXBwbGVhbXU0LnNob3AiLCJyaXBwbGVzdHJlYW0ydS5zaG9wIiwicmlwcGxlc3RyZWFtcy5zaG9wIiwiZGFkZHlsaXZlMS5ydSIsImRhZGR5LXN0cmVhbS54eXoiLCJzb2NjZXIxMDAuc2hvcCIsInNvY2NlcnN0cmVhbXMyLmNsaWNrIiwic29vcGVyc3RyZWFtNHUuc2hvcCIsInNwb3J0emxpdmUuc2hvcCIsInN0cmVhbWVyNHUuc2hvcCIsInN0cm9uc3RyZWFtLnNob3AiLCJ0ZWNodG9wM3Uuc2hvcCIsInZlbnVzaGQuY2xpY2siLCJ2aXBzdHJlYW1lci5zaG9wIiwid2F0Y2hoZHR2LnNob3AiLCJ3b3JsZHNwb3J0czR1LnNob3AiLCJ3b3JsZHN0cmVhbXMubG9sIiwid3d3Lndvcmxkc3RyZWFtei5zaG9wIiwid29ybGRzdHJlYW16LnNob3AiLCJ6ZW5saWMuc2hvcCIsImdvbXN0cmVhbS5pbmZvIiwidHJpcHBsZXN0cmVhbS5jb20iLCJrbHVic3BvcnRzLmZ1biIsIjI0N292by5sb2wiLCJzdHJlYW1saWdodC5sb2wiLCJwb3NjaXRlY2hzLmxvbCIsImZvb3RiYWxsc3RyZWFtcy5sb2wiLCJ0aGVzcG9ydC5sb2wiLCJ0aGViYWxkc3RyZWFtZXIubG9sIiwicm9ja2hkLmxvbCIsInR2dG9zcy5sb2wiLCJub3dhZ29hbC5sb2wiLCJ0b25uZXN0cmVhbXMuc2hvcCIsInNvY2Nlcmh1Yi5sb2wiLCJmMXN0cmVhbXMubG9sIiwiZW5nc3RyZWFtcy5zaG9wIiwiY3ljbGluc3BvcnQuc2hvcCIsInVuaXRlZGJhY2tlLnNob3AiLCJiZnN0di5zaG9wIiwiZHVwbGV4LWZ1bGwuc2hvcCIsImhvbW9zcG9ydHMuc2hvcCIsImZpcmVzdHJlYW00dS5zaG9wIiwidGhlZGFkZHkudG8iLCJmb3hzdHJlYW00dS5zaG9wIiwidGVjaHR0b3Auc2hvcCIsImFwa3NoaXAuc2hvcCIsImtsdWJzcG9ydHMuc2l0ZSIsInNwb3J0c3RyZWFtc2xpZmUuc2hvcCIsInJpcHBsZXN0cmVhbTR1LnNob3AiLCJraW5nc3RyZWFtc3Muc2hvcCIsInBhbmRhc3RyZWFtei5zaG9wIiwiZm9vdHlodW50ZXJoZC5zaG9wIiwicmlwcGxlYW11NHMuc2hvcCIsInNvY2NlcnlvdWtub3cuc2hvcCIsInJpcHBsZXN0cmVhbXMydS5zaG9wIiwidmlwc3RyZWFtZXJzLnNob3AiLCJ3b3JsZHNwb3J0ejR1LnNob3AiLCJoaXRzcG9ydHMuc2hvcCIsImZzcG9ydHNoZC5zaG9wIiwiYnV6enN0cmVhbS5zaG9wIiwiZnJlZXR2c3Bvci5zaG9wIiwibGl2ZXBsYXlzLnNob3AiLCJzcG9ydHNzLnNob3AiLCJ0aGVkYWRkeS5jbGljayIsInNwb3J0czJ3YXRjaC5zaG9wIiwiYnVkZHljZW50ZXIuc2hvcCIsImJpbmdzcG9ydC5zaG9wIiwidmlwcm93MS5zaG9wIiwic3BvcnRzc2xpdmUuc2hvcCIsImtvZml0di5saXZlIl0=";
+  var allowedDomains = JSON.parse(atob(encodedDomains));
+
+  console.log('allowedDomains:', JSON.stringify(allowedDomains, null, 2))
+}
+
+result:
+=======
+
+allowedDomains: [
+  "1ststream.shop",
+  "kingstreams.shop",
+  "a1sports.shop",
+  "arlive.shop",
+  "beststreams.shop",
+  "bigsportz.shop",
+  "bizzstream.shop",
+  "buddycenters.shop",
+  "crackstreamshd.shop",
+  "cwcstreams.com",
+  "daddyhd.shop",
+  "daddyislive.online",
+  "daddylive1.shop",
+  "dailytechs.shop",
+  "dlhd.sx",
+  "dlhd.so",
+  "poscitechs.xyz",
+  "doralive.live",
+  "freelivetvone.xyz",
+  "freetvspor.lol",
+  "linesportz.lol",
+  "livesports2u.shop",
+  "miztv.shop",
+  "mudasir3u.shop",
+  "one-stream.shop",
+  "pandastreams.shop",
+  "klubsports.buzz",
+  "poscitechs.shop",
+  "rainostream4u.shop",
+  "rainostreams.lol",
+  "rippleamu4.shop",
+  "ripplestream2u.shop",
+  "ripplestreams.shop",
+  "daddylive1.ru",
+  "daddy-stream.xyz",
+  "soccer100.shop",
+  "soccerstreams2.click",
+  "sooperstream4u.shop",
+  "sportzlive.shop",
+  "streamer4u.shop",
+  "stronstream.shop",
+  "techtop3u.shop",
+  "venushd.click",
+  "vipstreamer.shop",
+  "watchhdtv.shop",
+  "worldsports4u.shop",
+  "worldstreams.lol",
+  "www.worldstreamz.shop",
+  "worldstreamz.shop",
+  "zenlic.shop",
+  "gomstream.info",
+  "tripplestream.com",
+  "klubsports.fun",
+  "247ovo.lol",
+  "streamlight.lol",
+  "poscitechs.lol",
+  "footballstreams.lol",
+  "thesport.lol",
+  "thebaldstreamer.lol",
+  "rockhd.lol",
+  "tvtoss.lol",
+  "nowagoal.lol",
+  "tonnestreams.shop",
+  "soccerhub.lol",
+  "f1streams.lol",
+  "engstreams.shop",
+  "cyclinsport.shop",
+  "unitedbacke.shop",
+  "bfstv.shop",
+  "duplex-full.shop",
+  "homosports.shop",
+  "firestream4u.shop",
+  "thedaddy.to",
+  "foxstream4u.shop",
+  "techttop.shop",
+  "apkship.shop",
+  "klubsports.site",
+  "sportstreamslife.shop",
+  "ripplestream4u.shop",
+  "kingstreamss.shop",
+  "pandastreamz.shop",
+  "footyhunterhd.shop",
+  "rippleamu4s.shop",
+  "socceryouknow.shop",
+  "ripplestreams2u.shop",
+  "vipstreamers.shop",
+  "worldsportz4u.shop",
+  "hitsports.shop",
+  "fsportshd.shop",
+  "buzzstream.shop",
+  "freetvspor.shop",
+  "liveplays.shop",
+  "sportss.shop",
+  "thedaddy.click",
+  "sports2watch.shop",
+  "buddycenter.shop",
+  "bingsport.shop",
+  "viprow1.shop",
+  "sportsslive.shop",
+  "kofitv.live"
+]
+
+--------------------------------------------------------------------------------
+
+test:
+=====
+
+{
+  var encodedDomains = "WyIxc3RzdHJlYW0uc2hvcCIsImtpbmdzdHJlYW1zLnNob3AiLCJhMXNwb3J0cy5zaG9wIiwiYXJsaXZlLnNob3AiLCJiZXN0c3RyZWFtcy5zaG9wIiwiYmlnc3BvcnR6LnNob3AiLCJiaXp6c3RyZWFtLnNob3AiLCJidWRkeWNlbnRlcnMuc2hvcCIsImNyYWNrc3RyZWFtc2hkLnNob3AiLCJjd2NzdHJlYW1zLmNvbSIsImRhZGR5aGQuc2hvcCIsImRhZGR5aXNsaXZlLm9ubGluZSIsImRhZGR5bGl2ZTEuc2hvcCIsImRhaWx5dGVjaHMuc2hvcCIsImRsaGQuc3giLCJkbGhkLnNvIiwicG9zY2l0ZWNocy54eXoiLCJkb3JhbGl2ZS5saXZlIiwiZnJlZWxpdmV0dm9uZS54eXoiLCJmcmVldHZzcG9yLmxvbCIsImxpbmVzcG9ydHoubG9sIiwibGl2ZXNwb3J0czJ1LnNob3AiLCJtaXp0di5zaG9wIiwibXVkYXNpcjN1LnNob3AiLCJvbmUtc3RyZWFtLnNob3AiLCJwYW5kYXN0cmVhbXMuc2hvcCIsImtsdWJzcG9ydHMuYnV6eiIsInBvc2NpdGVjaHMuc2hvcCIsInJhaW5vc3RyZWFtNHUuc2hvcCIsInJhaW5vc3RyZWFtcy5sb2wiLCJyaXBwbGVhbXU0LnNob3AiLCJyaXBwbGVzdHJlYW0ydS5zaG9wIiwicmlwcGxlc3RyZWFtcy5zaG9wIiwiZGFkZHlsaXZlMS5ydSIsImRhZGR5LXN0cmVhbS54eXoiLCJzb2NjZXIxMDAuc2hvcCIsInNvY2NlcnN0cmVhbXMyLmNsaWNrIiwic29vcGVyc3RyZWFtNHUuc2hvcCIsInNwb3J0emxpdmUuc2hvcCIsInN0cmVhbWVyNHUuc2hvcCIsInN0cm9uc3RyZWFtLnNob3AiLCJ0ZWNodG9wM3Uuc2hvcCIsInZlbnVzaGQuY2xpY2siLCJ2aXBzdHJlYW1lci5zaG9wIiwid2F0Y2hoZHR2LnNob3AiLCJ3b3JsZHNwb3J0czR1LnNob3AiLCJ3b3JsZHN0cmVhbXMubG9sIiwid3d3Lndvcmxkc3RyZWFtei5zaG9wIiwid29ybGRzdHJlYW16LnNob3AiLCJ6ZW5saWMuc2hvcCIsImdvbXN0cmVhbS5pbmZvIiwidHJpcHBsZXN0cmVhbS5jb20iLCJrbHVic3BvcnRzLmZ1biIsIjI0N292by5sb2wiLCJzdHJlYW1saWdodC5sb2wiLCJwb3NjaXRlY2hzLmxvbCIsImZvb3RiYWxsc3RyZWFtcy5sb2wiLCJ0aGVzcG9ydC5sb2wiLCJ0aGViYWxkc3RyZWFtZXIubG9sIiwicm9ja2hkLmxvbCIsInR2dG9zcy5sb2wiLCJub3dhZ29hbC5sb2wiLCJ0b25uZXN0cmVhbXMuc2hvcCIsInNvY2Nlcmh1Yi5sb2wiLCJmMXN0cmVhbXMubG9sIiwiZW5nc3RyZWFtcy5zaG9wIiwiY3ljbGluc3BvcnQuc2hvcCIsInVuaXRlZGJhY2tlLnNob3AiLCJiZnN0di5zaG9wIiwiZHVwbGV4LWZ1bGwuc2hvcCIsImhvbW9zcG9ydHMuc2hvcCIsImZpcmVzdHJlYW00dS5zaG9wIiwidGhlZGFkZHkudG8iLCJmb3hzdHJlYW00dS5zaG9wIiwidGVjaHR0b3Auc2hvcCIsImFwa3NoaXAuc2hvcCIsImtsdWJzcG9ydHMuc2l0ZSIsInNwb3J0c3RyZWFtc2xpZmUuc2hvcCIsInJpcHBsZXN0cmVhbTR1LnNob3AiLCJraW5nc3RyZWFtc3Muc2hvcCIsInBhbmRhc3RyZWFtei5zaG9wIiwiZm9vdHlodW50ZXJoZC5zaG9wIiwicmlwcGxlYW11NHMuc2hvcCIsInNvY2NlcnlvdWtub3cuc2hvcCIsInJpcHBsZXN0cmVhbXMydS5zaG9wIiwidmlwc3RyZWFtZXJzLnNob3AiLCJ3b3JsZHNwb3J0ejR1LnNob3AiLCJoaXRzcG9ydHMuc2hvcCIsImZzcG9ydHNoZC5zaG9wIiwiYnV6enN0cmVhbS5zaG9wIiwiZnJlZXR2c3Bvci5zaG9wIiwibGl2ZXBsYXlzLnNob3AiLCJzcG9ydHNzLnNob3AiLCJ0aGVkYWRkeS5jbGljayIsInNwb3J0czJ3YXRjaC5zaG9wIiwiYnVkZHljZW50ZXIuc2hvcCIsImJpbmdzcG9ydC5zaG9wIiwidmlwcm93MS5zaG9wIiwic3BvcnRzc2xpdmUuc2hvcCIsImtvZml0di5saXZlIl0=";
+  var allowedDomains = JSON.parse(atob(encodedDomains));
+  var domains_regexp = [...allowedDomains].sort().map(domain => domain.replace('.', '\\.')).join('|')
+
+  console.log('domains_regexp:', domains_regexp)
+}
+
+result:
+=======
+
+domains_regexp: 1ststream\.shop|247ovo\.lol|a1sports\.shop|apkship\.shop|arlive\.shop|beststreams\.shop|bfstv\.shop|bigsportz\.shop|bingsport\.shop|bizzstream\.shop|buddycenter\.shop|buddycenters\.shop|buzzstream\.shop|crackstreamshd\.shop|cwcstreams\.com|cyclinsport\.shop|daddy-stream\.xyz|daddyhd\.shop|daddyislive\.online|daddylive1\.ru|daddylive1\.shop|dailytechs\.shop|dlhd\.so|dlhd\.sx|doralive\.live|duplex-full\.shop|engstreams\.shop|f1streams\.lol|firestream4u\.shop|footballstreams\.lol|footyhunterhd\.shop|foxstream4u\.shop|freelivetvone\.xyz|freetvspor\.lol|freetvspor\.shop|fsportshd\.shop|gomstream\.info|hitsports\.shop|homosports\.shop|kingstreams\.shop|kingstreamss\.shop|klubsports\.buzz|klubsports\.fun|klubsports\.site|kofitv\.live|linesportz\.lol|liveplays\.shop|livesports2u\.shop|miztv\.shop|mudasir3u\.shop|nowagoal\.lol|one-stream\.shop|pandastreams\.shop|pandastreamz\.shop|poscitechs\.lol|poscitechs\.shop|poscitechs\.xyz|rainostream4u\.shop|rainostreams\.lol|rippleamu4\.shop|rippleamu4s\.shop|ripplestream2u\.shop|ripplestream4u\.shop|ripplestreams\.shop|ripplestreams2u\.shop|rockhd\.lol|soccer100\.shop|soccerhub\.lol|soccerstreams2\.click|socceryouknow\.shop|sooperstream4u\.shop|sports2watch\.shop|sportss\.shop|sportsslive\.shop|sportstreamslife\.shop|sportzlive\.shop|streamer4u\.shop|streamlight\.lol|stronstream\.shop|techtop3u\.shop|techttop\.shop|thebaldstreamer\.lol|thedaddy\.click|thedaddy\.to|thesport\.lol|tonnestreams\.shop|tripplestream\.com|tvtoss\.lol|unitedbacke\.shop|venushd\.click|viprow1\.shop|vipstreamer\.shop|vipstreamers\.shop|watchhdtv\.shop|worldsports4u\.shop|worldsportz4u\.shop|worldstreams\.lol|worldstreamz\.shop|www\.worldstreamz.shop|zenlic\.shop
+
+--------------------------------------------------------------------------------
+
+test:
+=====
+
+{
+  var encodedDomains = "WyIxc3RzdHJlYW0uc2hvcCIsImtpbmdzdHJlYW1zLnNob3AiLCJhMXNwb3J0cy5zaG9wIiwiYXJsaXZlLnNob3AiLCJiZXN0c3RyZWFtcy5zaG9wIiwiYmlnc3BvcnR6LnNob3AiLCJiaXp6c3RyZWFtLnNob3AiLCJidWRkeWNlbnRlcnMuc2hvcCIsImNyYWNrc3RyZWFtc2hkLnNob3AiLCJjd2NzdHJlYW1zLmNvbSIsImRhZGR5aGQuc2hvcCIsImRhZGR5aXNsaXZlLm9ubGluZSIsImRhZGR5bGl2ZTEuc2hvcCIsImRhaWx5dGVjaHMuc2hvcCIsImRsaGQuc3giLCJkbGhkLnNvIiwicG9zY2l0ZWNocy54eXoiLCJkb3JhbGl2ZS5saXZlIiwiZnJlZWxpdmV0dm9uZS54eXoiLCJmcmVldHZzcG9yLmxvbCIsImxpbmVzcG9ydHoubG9sIiwibGl2ZXNwb3J0czJ1LnNob3AiLCJtaXp0di5zaG9wIiwibXVkYXNpcjN1LnNob3AiLCJvbmUtc3RyZWFtLnNob3AiLCJwYW5kYXN0cmVhbXMuc2hvcCIsImtsdWJzcG9ydHMuYnV6eiIsInBvc2NpdGVjaHMuc2hvcCIsInJhaW5vc3RyZWFtNHUuc2hvcCIsInJhaW5vc3RyZWFtcy5sb2wiLCJyaXBwbGVhbXU0LnNob3AiLCJyaXBwbGVzdHJlYW0ydS5zaG9wIiwicmlwcGxlc3RyZWFtcy5zaG9wIiwiZGFkZHlsaXZlMS5ydSIsImRhZGR5LXN0cmVhbS54eXoiLCJzb2NjZXIxMDAuc2hvcCIsInNvY2NlcnN0cmVhbXMyLmNsaWNrIiwic29vcGVyc3RyZWFtNHUuc2hvcCIsInNwb3J0emxpdmUuc2hvcCIsInN0cmVhbWVyNHUuc2hvcCIsInN0cm9uc3RyZWFtLnNob3AiLCJ0ZWNodG9wM3Uuc2hvcCIsInZlbnVzaGQuY2xpY2siLCJ2aXBzdHJlYW1lci5zaG9wIiwid2F0Y2hoZHR2LnNob3AiLCJ3b3JsZHNwb3J0czR1LnNob3AiLCJ3b3JsZHN0cmVhbXMubG9sIiwid3d3Lndvcmxkc3RyZWFtei5zaG9wIiwid29ybGRzdHJlYW16LnNob3AiLCJ6ZW5saWMuc2hvcCIsImdvbXN0cmVhbS5pbmZvIiwidHJpcHBsZXN0cmVhbS5jb20iLCJrbHVic3BvcnRzLmZ1biIsIjI0N292by5sb2wiLCJzdHJlYW1saWdodC5sb2wiLCJwb3NjaXRlY2hzLmxvbCIsImZvb3RiYWxsc3RyZWFtcy5sb2wiLCJ0aGVzcG9ydC5sb2wiLCJ0aGViYWxkc3RyZWFtZXIubG9sIiwicm9ja2hkLmxvbCIsInR2dG9zcy5sb2wiLCJub3dhZ29hbC5sb2wiLCJ0b25uZXN0cmVhbXMuc2hvcCIsInNvY2Nlcmh1Yi5sb2wiLCJmMXN0cmVhbXMubG9sIiwiZW5nc3RyZWFtcy5zaG9wIiwiY3ljbGluc3BvcnQuc2hvcCIsInVuaXRlZGJhY2tlLnNob3AiLCJiZnN0di5zaG9wIiwiZHVwbGV4LWZ1bGwuc2hvcCIsImhvbW9zcG9ydHMuc2hvcCIsImZpcmVzdHJlYW00dS5zaG9wIiwidGhlZGFkZHkudG8iLCJmb3hzdHJlYW00dS5zaG9wIiwidGVjaHR0b3Auc2hvcCIsImFwa3NoaXAuc2hvcCIsImtsdWJzcG9ydHMuc2l0ZSIsInNwb3J0c3RyZWFtc2xpZmUuc2hvcCIsInJpcHBsZXN0cmVhbTR1LnNob3AiLCJraW5nc3RyZWFtc3Muc2hvcCIsInBhbmRhc3RyZWFtei5zaG9wIiwiZm9vdHlodW50ZXJoZC5zaG9wIiwicmlwcGxlYW11NHMuc2hvcCIsInNvY2NlcnlvdWtub3cuc2hvcCIsInJpcHBsZXN0cmVhbXMydS5zaG9wIiwidmlwc3RyZWFtZXJzLnNob3AiLCJ3b3JsZHNwb3J0ejR1LnNob3AiLCJoaXRzcG9ydHMuc2hvcCIsImZzcG9ydHNoZC5zaG9wIiwiYnV6enN0cmVhbS5zaG9wIiwiZnJlZXR2c3Bvci5zaG9wIiwibGl2ZXBsYXlzLnNob3AiLCJzcG9ydHNzLnNob3AiLCJ0aGVkYWRkeS5jbGljayIsInNwb3J0czJ3YXRjaC5zaG9wIiwiYnVkZHljZW50ZXIuc2hvcCIsImJpbmdzcG9ydC5zaG9wIiwidmlwcm93MS5zaG9wIiwic3BvcnRzc2xpdmUuc2hvcCIsImtvZml0di5saXZlIl0=";
+  var allowedDomains = JSON.parse(atob(encodedDomains));
+  var top_level_domains, top_level_domains_regexp
+
+  top_level_domains = {}
+  for (let domain of allowedDomains) {
+    const tld = domain.split('.').pop()
+    top_level_domains[tld] = 1
+  }
+  top_level_domains = Object.keys(top_level_domains).sort()
+  top_level_domains_regexp = top_level_domains.join('|')
+
+  console.log('top_level_domains_regexp:', top_level_domains_regexp)
+}
+
+result:
+=======
+
+top_level_domains_regexp: buzz|click|com|fun|info|live|lol|online|ru|shop|site|so|sx|to|xyz
+
+--------------------------------------------------------------------------------
