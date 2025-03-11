@@ -1,0 +1,48 @@
+--------------------------------------------------------------------------------
+
+https://dokoplay.xyz/premiumtv/daddylivehd.php?id=832
+
+--------------------------------------------------------------------------------
+
+notes:
+ * m3u8 video url is no-longer a static string..
+   it gets assembled in javascript
+
+--------------------------------------------------------------------------------
+
+    var player;
+
+    // Extract the channel key using PHP.
+    // For example, if $embed = "https://masxs.mizhls.ru/lb/wikinhl1/index.m3u8",
+    // then channelKey will be "wikinhl1".
+    var channelKey = "premium832";
+    console.log("Channel Key:", channelKey);
+
+    // Fetch the server key from your server_lookup.php.
+    fetch('/server_lookup.php?channel_id=' + channelKey)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        if (!data.server_key) {
+          document.getElementById("player-container").innerHTML = "ID premium832 might be dead!";
+          console.error("No server_key received from server_lookup.php");
+          return;
+        }
+        var serverKey = data.server_key;
+        console.log("Server Key:", serverKey);
+
+        // Build the final m3u8 URL using the server key.
+        var m3u8Url = (serverKey === "top1/cdn") ?
+            "https://top1.koskoros.ru/top1/cdn/" + channelKey + "/mono.m3u8" :
+            "https://" + serverKey + "new.koskoros.ru/" + serverKey + "/" + channelKey + "/mono.m3u8";
+        console.log("Final m3u8Url:", m3u8Url);
+
+        // Initialize the Clappr player inside the "clappr-container".
+        player = new Clappr.Player({
+          source: m3u8Url,
+          ...
+        });
+      })
+
+--------------------------------------------------------------------------------
