@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Daddylive
 // @description  Improve site usability. Watch videos in external player.
-// @version      2.3.4
+// @version      2.3.5
 // @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:1ststream\.shop|247ovo\.lol|a1sports\.shop|apkship\.shop|arlive\.shop|beststreams\.shop|bfstv\.shop|bigsportz\.shop|bingsport\.shop|bizz-streams2u\.shop|bizzstream\.shop|buddycenter\.shop|buddycenters\.shop|buzzstream\.shop|crackstreamshd\.shop|cwcstreams\.com|cyclinsport\.shop|daddy-stream\.xyz|daddyhd\.shop|daddyislive\.online|daddylive\.mp|daddylive1\.ru|daddylive1\.shop|dailytechs\.shop|dlhd\.so|dlhd\.sx|doralive\.live|duplex-full\.shop|engstreams\.shop|f1streams\.lol|firestream4u\.shop|footballstreams\.lol|footyhunterhd\.shop|foxstream4u\.shop|freelivetvone\.xyz|freetvspor\.lol|freetvspor\.shop|fsportshd\.shop|gomstream\.info|hitsports\.shop|homosports\.shop|kingstreams\.shop|kingstreamss\.shop|klubsports\.buzz|klubsports\.fun|klubsports\.site|kofitv\.live|linesportz\.lol|liveplays\.shop|livesports2u\.shop|liveworld\.shop|miztv\.live|miztv\.shop|mudasir3u\.shop|nowagoal\.lol|one-stream\.shop|pandastreams\.shop|pandastreamz\.shop|poscitechs\.lol|poscitechs\.shop|poscitechs\.xyz|rainostream4u\.shop|rainostreams\.lol|rippleamu4\.shop|rippleamu4s\.shop|ripplestream2u\.shop|ripplestream4u\.shop|ripplestreams\.shop|ripplestreams2u\.shop|rockhd\.lol|soccer100\.shop|soccerhub\.lol|soccerstreams2\.click|socceryouknow\.shop|sooperstream4u\.shop|sports2watch\.shop|sportss\.shop|sportsslive\.shop|sportstreamslife\.shop|sportzlive\.shop|streamer4u\.shop|streamlight\.lol|stronstream\.shop|techtop3u\.shop|techttop\.shop|thebaldstreamer\.lol|thedaddy\.click|thedaddy\.to|thesport\.lol|tonnestreams\.shop|topstreamz\.shop|tripplestream\.com|tvtoss\.lol|unitedbacke\.shop|venushd\.click|viprow1\.shop|vipstreamer\.shop|vipstreamers\.shop|watchhdtv\.shop|worldsports4u\.shop|worldsportz4u\.shop|worldsstream\.shop|worldstreams\.lol|worldstreamz\.shop|www\.worldstreamz.shop|zenlic\.shop)\/.*$/
 // @include      /^https?:\/\/(?:[^\.\/]*\.)*(?:cookiewebplay|daddylive|daddylivehd|dlhd|dokoplay|gocast|jewelavid|maxsport|quest4play|radamel|sportkart|streamservicehd|thedaddy|weblivehdplay|zvision)\d*\.(?:buzz|click|com|fun|icu|info|link|live|lol|me|mp|one|online|ru|shop|site|so|sx|to|watch|xyz)\/.*$/
 // @icon         https://i.imgur.com/8EL6mr3.png
@@ -46,9 +46,66 @@ var constants = {
 // ----------------------------------------------------------------------------- state
 
 var state = {
+  window:      null,
   document:    null,
   url:         null,
   referer_url: null
+}
+
+// ----------------------------------------------------------------------------- CSP
+
+// add support for CSP 'Trusted Type' assignment
+var add_default_trusted_type_policy = function() {
+  if (typeof unsafeWindow.trustedTypes !== 'undefined') {
+    try {
+      var passthrough_policy = function(string) {return string}
+
+      unsafeWindow.trustedTypes.createPolicy('default', {
+          createHTML:      passthrough_policy,
+          createScript:    passthrough_policy,
+          createScriptURL: passthrough_policy
+      })
+    }
+    catch(e) {}
+  }
+}
+
+// ----------------------------------------------------------------------------- helpers (xhr)
+
+var download_text = function(url, callback) {
+  var xhr = new XMLHttpRequest()
+
+  xhr.open('GET', url, true, null, null)
+
+  xhr.onload = function(e) {
+    if (xhr.readyState === 4) {
+      if ((xhr.status >= 200) && (xhr.status < 300)) {
+        callback(null, xhr.responseText)
+        return
+      }
+    }
+    callback(new Error())
+  }
+
+  xhr.onerror = function(e) {
+    callback(new Error())
+  }
+
+  xhr.send()
+}
+
+var download_json = function(url, callback) {
+  download_text(url, function(error, text){
+    try {
+      if (error)
+        callback(error)
+      else
+        callback(null, JSON.parse(text))
+    }
+    catch(e) {
+      callback(e)
+    }
+  })
 }
 
 // ----------------------------------------------------------------------------- URL links to tools on Webcast Reloaded website
@@ -167,6 +224,7 @@ var process_window = function() {
   var iframe_url
 
   if (!state.document) {
+    state.window   = unsafeWindow.window
     state.document = unsafeWindow.document
     state.url      = unsafeWindow.location.href
   }
@@ -182,9 +240,13 @@ var process_window = function() {
       state.referer_url = iframe_url
     }
 
+    add_default_trusted_type_policy()
     rewrite_dom()
 
-    process_dom_video_url() || process_dom_nested_iframe()
+    process_dom_video_url(function(success) {
+      if (!success)
+        process_dom_nested_iframe()
+    })
   }
 }
 
@@ -258,23 +320,23 @@ var empty_dom_node = function(node) {
 
 // ----------------------------------------------------------------------------- process DOM (video url)
 
-var process_dom_video_url = function() {
-  var video_url = extract_dom_video_url()
+var process_dom_video_url = function(callback) {
+  extract_dom_video_url(function(video_url) {
+    if (video_url) {
+      if (user_options.common.enable_debug_alerts) {
+        unsafeWindow.alert(JSON.stringify({hls_url: video_url, referer_url: state.referer_url}, null, 2))
+      }
 
-  if (video_url) {
-    if (user_options.common.enable_debug_alerts) {
-      unsafeWindow.alert(JSON.stringify({hls_url: video_url, referer_url: state.referer_url}, null, 2))
+      process_hls_url(video_url, /* vtt_url= */ null, state.referer_url)
+    }
+    else {
+      if (user_options.common.enable_debug_alerts) {
+        unsafeWindow.alert('video not found in:' + "\n" + state.url)
+      }
     }
 
-    process_hls_url(video_url, /* vtt_url= */ null, state.referer_url)
-  }
-  else {
-    if (user_options.common.enable_debug_alerts) {
-      unsafeWindow.alert('video not found in:' + "\n" + state.url)
-    }
-  }
-
-  return !!video_url
+    callback(!!video_url)
+  })
 }
 
 var extract_dom_video_url_regexs = {
@@ -284,34 +346,47 @@ var extract_dom_video_url_regexs = {
   },
   v02: {
     channel_id: /\s+channelKey\s*=\s*['"]([^'"]+)['"]/,
-    video_url:  /['"](http[^'"]+)['"]\s*\+\s*channelKey\s*\+\s*['"]([^'"]+\.m3u8[^'"]*)['"]/
+    video_url: {
+      default_server_key: /['"](http[^'"]+)['"]\s*\+\s*channelKey\s*\+\s*['"]([^'"]+\.m3u8[^'"]*)['"]/,
+      dynamic_server_key: /['"](http[^'"]+)['"]\s*\+\s*serverKey\s*\+\s*['"]([^'"]+)['"]\s*\+\s*serverKey\s*\+\s*['"]([^'"]+)['"]\s*\+\s*channelKey\s*\+\s*['"]([^'"]+\.m3u8[^'"]*)['"]/
+    }
   },
   v03: {
     video_method: /[;\s]player\.load\s*\(\s*\{\s*source\s*:\s*(.+?)\s*\(\s*\)\s*,\s*mimeType\s*:\s*['"]([^'"]+)['"]\s*\}\s*\)/
   }
 }
 
-var extract_dom_video_url = function() {
+var extract_dom_video_url = function(callback) {
   var scripts, script, video_url
 
   scripts = extract_dom_scripts()
+
+  var video_extractor_callbacks_remaining = scripts.length * 3
+  var video_extractor_callback = function(extracted_video_url) {
+    video_extractor_callbacks_remaining -= 1
+
+    if (!video_url && extracted_video_url) {
+      video_url = normalize_video_url(extracted_video_url)
+      callback(video_url)
+    }
+
+    if (!video_url && !video_extractor_callbacks_remaining) {
+      callback(null)
+    }
+  }
 
   for (var i=0; i < scripts.length; i++) {
     script = scripts[i]
     script = script.innerHTML
     script = script.replace(extract_dom_video_url_regexs.whitespace, ' ')
 
-    video_url = extract_dom_video_url_01(script) || extract_dom_video_url_02(script) || extract_dom_video_url_03(script)
-
-    if (video_url) break
+    extract_dom_video_url_01(script, video_extractor_callback)
+    extract_dom_video_url_02(script, video_extractor_callback)
+    extract_dom_video_url_03(script, video_extractor_callback)
   }
-
-  video_url = normalize_video_url(video_url)
-
-  return video_url
 }
 
-var extract_dom_video_url_01 = function(script) {
+var extract_dom_video_url_01 = function(script, callback) {
   var match, video_url
 
   match = extract_dom_video_url_regexs.v01.video_url.exec(script)
@@ -319,26 +394,37 @@ var extract_dom_video_url_01 = function(script) {
     video_url = match[1]
   }
 
-  return video_url
+  callback(video_url)
 }
 
-var extract_dom_video_url_02 = function(script) {
-  var match, channel_id, video_url
+var extract_dom_video_url_02 = function(script, callback) {
+  var match, channel_id
 
   match = extract_dom_video_url_regexs.v02.channel_id.exec(script)
   if (match) {
     channel_id = match[1]
 
-    match = extract_dom_video_url_regexs.v02.video_url.exec(script)
-    if (match) {
-      video_url = match[1] + channel_id + match[2]
-    }
-  }
+    download_json(state.window.location.protocol + '//' + state.window.location.hostname + '/server_lookup.php?channel_id=' + channel_id, function(error, data) {
+      var video_url
 
-  return video_url
+      if (error || !data || (typeof data !== 'object') || !data.server_key) {
+        match = extract_dom_video_url_regexs.v02.video_url.default_server_key.exec(script)
+        if (match) {
+          video_url = match[1] + channel_id + match[2]
+        }
+      }
+      else {
+        match = extract_dom_video_url_regexs.v02.video_url.dynamic_server_key.exec(script)
+        if (match) {
+          video_url = match[1] + data.server_key + match[2] + data.server_key + match[3] + channel_id + match[4]
+        }
+      }
+      callback(video_url)
+    })
+  }
 }
 
-var extract_dom_video_url_03 = function(script) {
+var extract_dom_video_url_03 = function(script, callback) {
   var match, video_method, video_mimetype, video_url
 
   match = extract_dom_video_url_regexs.v03.video_method.exec(script)
@@ -351,7 +437,7 @@ var extract_dom_video_url_03 = function(script) {
     }
   }
 
-  return video_url
+  callback(video_url)
 }
 
 var normalize_video_url = function(video_url) {
@@ -378,6 +464,7 @@ var process_dom_nested_iframe = function() {
 
     try {
       // can the top window access the document belonging to the nested iframe (ie: same domain)
+      state.window   = iframe.contentWindow
       state.document = iframe.contentDocument
 
       if (!state.document)
@@ -410,6 +497,7 @@ var process_dom_nested_iframe = function() {
       else if (user_options.common.emulate_webmonkey)
         redirect_to_url(iframe_url)
 
+      state.window      = null
       state.document    = null
       state.url         = null
       state.referer_url = null
